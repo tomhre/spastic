@@ -4,9 +4,18 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+import router from './routes.js';
+import VueRouter from 'vue-router';
+import Auth from './auth.js';
+
 require('./bootstrap');
 
+
 window.Vue = require('vue');
+window.Event = new Vue()
+window.auth = new Auth();
+
+Vue.use(VueRouter);
 
 /**
  * The following block of code may be used to automatically register your
@@ -21,6 +30,37 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+
+/* LAYOUTS */
+Vue.component('main-layout', require('./views/layouts/MainLayout.vue').default);
+
+
+/* PAGES */
+/*
+Vue.component('home', require('./views/Home.vue').default);
+Vue.component('about', require('./views/About.vue').default);
+Vue.component('login', require('./views/Login.vue').default);
+Vue.component('dashboard', require('./views/Dashboard.vue').default);
+*/
+
+
+/* 
+Vue.component(
+    'passport-clients',
+    require('./components/passport/Clients.vue').default
+);
+
+Vue.component(
+    'passport-authorized-clients',
+    require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+    'passport-personal-access-tokens',
+    require('./components/passport/PersonalAccessTokens.vue').default
+);
+*/
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -29,4 +69,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    router,
 });
