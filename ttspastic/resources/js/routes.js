@@ -3,25 +3,32 @@ import VueRouter from 'vue-router';
 let routes = [
     {
         path: '/',
-        component: require('./views/Home.vue').default
+        component: require('./views/public/Home.vue').default
     },
     {
         path: '/about',
-        component: require('./views/About.vue').default
+        component: require('./views/public/About.vue').default
     },
     {
         path: '/login',
-        component: require('./views/Login.vue').default
+        component: require('./views/public/Login.vue').default
     },
     {
         path: '/dashboard',
-        component: require('./views/Dashboard.vue').default,
+        component: require('./views/application/Dashboard.vue').default,
+        meta: { middlewareAuth: true }
+    },
+    {
+        path: '/clients',
+        component: require('./views/application/clients/ClientsHome.vue').default,
         meta: { middlewareAuth: true }
     }
 ];
 
+
 const router = new VueRouter({
-    routes
+    mode: 'history',
+    routes: routes,
 });
 
 router.beforeEach((to, from, next) => {

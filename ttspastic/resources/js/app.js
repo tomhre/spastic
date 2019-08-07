@@ -33,6 +33,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 /* LAYOUTS */
 Vue.component('main-layout', require('./views/layouts/MainLayout.vue').default);
+Vue.component('dashboard-nav', require('./views/application/includes/DashboardNav.vue').default);
 
 
 /* PAGES */
