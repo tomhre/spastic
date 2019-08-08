@@ -10,7 +10,7 @@
         <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
         <link href="{{ mix('css/app.css') }}?v=<?php echo(filemtime(public_path().'/css/app.css')); ?>" rel="stylesheet">
         
-        <title>SPA tutorial by Voerro</title>
+        <title>Teemo</title>
     </head>
     <body>
         <div id="app">

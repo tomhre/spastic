@@ -53567,24 +53567,73 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [{
   path: '/',
-  component: __webpack_require__(/*! ./views/public/Home.vue */ "./resources/js/views/public/Home.vue")["default"]
+  component: __webpack_require__(/*! ./views/public/Home.vue */ "./resources/js/views/public/Home.vue")["default"],
+  meta: {
+    middlewareAuth: true,
+    title: 'Teemo - Home',
+    metaTags: [{
+      name: 'description',
+      content: 'Welcome to Teemo, your project, time and holiday management little helper.'
+    }, {
+      property: 'og:description',
+      content: 'Welcome to Teemo, your project, time and holiday management little helper.'
+    }]
+  }
 }, {
   path: '/about',
-  component: __webpack_require__(/*! ./views/public/About.vue */ "./resources/js/views/public/About.vue")["default"]
+  component: __webpack_require__(/*! ./views/public/About.vue */ "./resources/js/views/public/About.vue")["default"],
+  meta: {
+    middlewareAuth: true,
+    title: 'Teemo - About Teemo',
+    metaTags: [{
+      name: 'description',
+      content: 'Have a look at how Teemo can make your time tracking, project management and holiday management made simple.'
+    }, {
+      property: 'og:description',
+      content: 'Have a look at how Teemo can make your time tracking, project management and holiday management made simple.'
+    }]
+  }
 }, {
   path: '/login',
-  component: __webpack_require__(/*! ./views/public/Login.vue */ "./resources/js/views/public/Login.vue")["default"]
+  component: __webpack_require__(/*! ./views/public/Login.vue */ "./resources/js/views/public/Login.vue")["default"],
+  meta: {
+    middlewareAuth: true,
+    title: 'Teemo - Login',
+    metaTags: [{
+      name: 'description',
+      content: 'Login to your account to experience Teemo.'
+    }, {
+      property: 'og:description',
+      content: 'Login to your account to experience Teemo.'
+    }]
+  }
 }, {
   path: '/dashboard',
   component: __webpack_require__(/*! ./views/application/Dashboard.vue */ "./resources/js/views/application/Dashboard.vue")["default"],
   meta: {
-    middlewareAuth: true
+    middlewareAuth: true,
+    title: 'Teemo - Dashboard',
+    metaTags: [{
+      name: 'description',
+      content: 'Dashboard is a collection of your dashlets as set in your settings.'
+    }, {
+      property: 'og:description',
+      content: 'Dashboard is a collection of your dashlets as set in your settings.'
+    }]
   }
 }, {
   path: '/clients',
   component: __webpack_require__(/*! ./views/application/clients/ClientsHome.vue */ "./resources/js/views/application/clients/ClientsHome.vue")["default"],
   meta: {
-    middlewareAuth: true
+    middlewareAuth: true,
+    title: 'Teemo - Client Management',
+    metaTags: [{
+      name: 'description',
+      content: 'This page allows management of clients, create, update and browse all your clients with ease.'
+    }, {
+      property: 'og:description',
+      content: 'This page allows management of clients, create, update and browse all your clients with ease.'
+    }]
   }
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
@@ -53592,6 +53641,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   routes: routes
 });
 router.beforeEach(function (to, from, next) {
+  document.title = to.meta.title;
+
   if (to.matched.some(function (record) {
     return record.meta.middlewareAuth;
   })) {
