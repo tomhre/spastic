@@ -1819,11 +1819,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       clients: [],
-      client: null
+      client: null,
+      client_id: '',
+      client_name: '',
+      client_description: '',
+      client_contact_name: '',
+      client_contact_phone: '',
+      client_contact_email: ''
     };
   },
   methods: {
@@ -1842,10 +1882,82 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     loadClientData: function loadClientData(client_id) {
-      this.client = {
-        name: 'client1',
-        id: 1
+      var t = this;
+      this.clients.forEach(function (client) {
+        if (client.id == client_id) {
+          t.client = client;
+          t.client_id = client.id;
+          t.client_name = client.name;
+          t.client_description = client.description;
+          t.client_contact_name = client.contact_name;
+          t.client_contact_phone = client.contact_phone;
+          t.client_contact_email = client.contact_email;
+        }
+      });
+    },
+    update: function update() {
+      var _this2 = this;
+
+      var data = {
+        name: this.client_name,
+        description: this.client_description,
+        contact_name: this.client_contact_name,
+        contact_phone: this.client_contact_phone,
+        contact_email: this.client_contact_email
       };
+      axios.put('/api/clients/' + this.client_id, data).then(function (_ref3) {
+        var data = _ref3.data;
+
+        _this2.getClients(); // let user know it was successful
+
+      })["catch"](function (_ref4) {
+        var response = _ref4.response;
+
+        if (response.status === 401) {
+          window.location = "/login";
+        } // process other errors
+
+      });
+    },
+    create: function create() {
+      var _this3 = this;
+
+      var data = {
+        name: this.client_name,
+        description: this.client_description,
+        contact_name: this.client_contact_name,
+        contact_phone: this.client_contact_phone,
+        contact_email: this.client_contact_email
+      };
+      axios.post('/api/clients/', data).then(function (_ref5) {
+        var data = _ref5.data;
+
+        _this3.getClients(); // let user know it was successful
+
+      })["catch"](function (_ref6) {
+        var response = _ref6.response;
+
+        if (response.status === 401) {
+          window.location = "/login";
+        } // process other errors
+
+      });
+    },
+    clearClient: function clearClient() {
+      this.client = null;
+      this.client_id = '';
+      this.client_name = '';
+      this.client_description = '';
+      this.client_contact_name = '';
+      this.client_contact_phone = '';
+      this.client_contact_email = '';
+    },
+    navClass: function navClass(id) {
+      if (id == this.client_id) {
+        return 'selected';
+      }
+
+      return '';
     }
   },
   mounted: function mounted() {
@@ -1853,7 +1965,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.getClients();
-  }
+  },
+  computed: {}
 });
 
 /***/ }),
@@ -37521,15 +37634,20 @@ var render = function() {
       _c("div", { staticClass: "container-fluid" }, [
         _c("div", { staticClass: "row" }, [
           _c(
-            "nav",
-            { staticClass: "col-md-2 d-none d-md-block bg-light sidebar" },
+            "div",
+            {
+              staticClass:
+                "col-md-2 d-none d-md-block bg-light side-nav sidebar"
+            },
             [
-              _c("div", { staticClass: "sidebar-sticky" }, [
-                _c(
-                  "ul",
-                  { staticClass: "nav flex-column" },
-                  _vm._l(_vm.clients, function(client) {
-                    return _c("li", { staticClass: "nav-item" }, [
+              _c(
+                "ul",
+                { staticClass: "nav flex-column" },
+                _vm._l(_vm.clients, function(client) {
+                  return _c(
+                    "li",
+                    { staticClass: "nav-item", class: _vm.navClass(client.id) },
+                    [
                       _c(
                         "a",
                         {
@@ -37546,11 +37664,11 @@ var render = function() {
                           _c("span", { staticClass: "sr-only" })
                         ]
                       )
-                    ])
-                  }),
-                  0
-                )
-              ])
+                    ]
+                  )
+                }),
+                0
+              )
             ]
           ),
           _vm._v(" "),
@@ -37561,16 +37679,196 @@ var render = function() {
               attrs: { role: "main" }
             },
             [
-              _vm.client != null
-                ? _c(
-                    "div",
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "col-sm-12",
+                    staticStyle: { "text-align": "right" }
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        on: { click: _vm.clearClient }
+                      },
+                      [_vm._v("NEW")]
+                    ),
+                    _vm._v(" "),
+                    _c("hr")
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.client_name,
+                        expression: "client_name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.client_name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.client_name = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("label", [_vm._v("Description:")]),
+                  _vm._v(" "),
+                  _c(
+                    "textarea",
                     {
-                      staticClass:
-                        "d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.client_description,
+                          expression: "client_description"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      domProps: { value: _vm.client_description },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.client_description = $event.target.value
+                        }
+                      }
                     },
-                    [_c("h1", { staticClass: "h2" })]
+                    [
+                      _vm._v(
+                        "                            " +
+                          _vm._s(_vm.client_description) +
+                          "\n                        "
+                      )
+                    ]
                   )
-                : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("Contact Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.client_contact_name,
+                        expression: "client_contact_name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.client_contact_name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.client_contact_name = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("label", [_vm._v("Contact Phone:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.client_contact_phone,
+                        expression: "client_contact_phone"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.client_contact_phone },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.client_contact_phone = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("label", [_vm._v("Contact Email:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.client_contact_email,
+                        expression: "client_contact_email"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "email" },
+                    domProps: { value: _vm.client_contact_email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.client_contact_email = $event.target.value
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "col-sm-12",
+                    staticStyle: { "text-align": "right" }
+                  },
+                  [
+                    _c("hr"),
+                    _vm._v(" "),
+                    _vm.client_id
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            on: { click: _vm.update }
+                          },
+                          [_vm._v("UPDATE")]
+                        )
+                      : _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            on: { click: _vm.create }
+                          },
+                          [_vm._v("CREATE")]
+                        )
+                  ]
+                )
+              ])
             ]
           )
         ])

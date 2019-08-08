@@ -10665,3 +10665,22 @@ a.text-dark:focus {
   height: 4.5em;
 }
 
+.side-nav .nav {
+  border-radius: 5px;
+  border: 1px solid #CCC;
+}
+
+.side-nav .nav .nav-item {
+  border-bottom: 1px solid #CCC;
+}
+
+.side-nav .nav .nav-item.selected {
+  background-color: #343a40;
+  color: #FFF;
+  border-bottom: 1px solid #CCC;
+}
+
+.navbar.fixed-top {
+  border-bottom: 3px solid #6d00db;
+}
+

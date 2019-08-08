@@ -28,3 +28,27 @@
     min-height: 4.5em;
     height: 4.5em;
 }
+
+@mixin rounded {
+    // write the css here
+    border-radius: 5px;
+}
+
+.side-nav .nav {
+    @include rounded;
+    border: 1px solid $border;
+}
+
+.side-nav .nav .nav-item {
+    border-bottom: 1px solid $border;
+}
+
+.side-nav .nav .nav-item.selected {
+    background-color: $background-selected;
+    color: $background-selected-text;
+    border-bottom: 1px solid $border;
+}
+
+.navbar.fixed-top {
+    border-bottom: 3px solid #6d00db;
+}

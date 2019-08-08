@@ -3,22 +3,56 @@
         <dashboard-nav></dashboard-nav>
         <div class="container-fluid">
             <div class="row">
-                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                    <div class="sidebar-sticky">
-                        <ul class="nav flex-column">
-                            <li v-for="client in clients" class="nav-item">
-                                <a class="nav-link" @click="loadClientData(client.id)">
-                                    <span data-feather="home"></span> {{client.name}} <span class="sr-only"></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+
+                <div class="col-md-2 d-none d-md-block bg-light side-nav sidebar">    
+                    <ul class="nav flex-column">
+                        <li v-for="client in clients" class="nav-item" v-bind:class="navClass(client.id)">
+                            <a class="nav-link" @click="loadClientData(client.id)">
+                                <span data-feather="home"></span> {{client.name}} <span class="sr-only"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                    <div v-if="client != null" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 class="h2"></h1>
+
+                    <div class="row">
+                        <div class="col-sm-12" style="text-align:right;">
+                            <button @click="clearClient" class="btn btn-primary">NEW</button>
+                            <hr>
+                        </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>Name:</label>
+                            <input class="form-control" v-model="client_name" />
+                            <br>
+                            <label>Description:</label>
+                            <textarea class="form-control" v-model="client_description">
+                                {{client_description}}
+                            </textarea>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Contact Name:</label>
+                            <input class="form-control" v-model="client_contact_name" />
+                            <br>
+                            <label>Contact Phone:</label>
+                            <input class="form-control" v-model="client_contact_phone" />
+                            <br>
+                            <label>Contact Email:</label>
+                            <input type="email" class="form-control" v-model="client_contact_email" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12" style="text-align:right;">
+                            <hr>
+                            <button v-if="client_id" @click="update" class="btn btn-primary">UPDATE</button>
+                            <button v-else @click="create" class="btn btn-primary">CREATE</button>
+                        </div>
+                    </div>
+
                 </main>
             </div>
         </div>
@@ -31,6 +65,12 @@
             return {
                 clients: [],
                 client: null,
+                client_id: '',
+                client_name: '',
+                client_description: '',
+                client_contact_name: '',
+                client_contact_phone: '',   
+                client_contact_email: '',
             };
         },
 
@@ -49,7 +89,86 @@
             },
 
             loadClientData(client_id) {
-                this.client = {name:'client1', id: 1}
+                var t = this;
+
+                this.clients.forEach(function(client){
+                    if(client.id == client_id) {
+                        t.client = client;
+                        t.client_id = client.id;
+                        t.client_name = client.name;
+                        t.client_description = client.description;
+                        t.client_contact_name = client.contact_name;
+                        t.client_contact_phone = client.contact_phone;   
+                        t.client_contact_email = client.contact_email;
+                    }
+                });
+            },
+
+            update() {
+
+                var data = {
+                    name: this.client_name,
+                    description: this.client_description,
+                    contact_name: this.client_contact_name,
+                    contact_phone: this.client_contact_phone,
+                    contact_email: this.client_contact_email,
+                    
+                };
+
+                axios.put('/api/clients/'+this.client_id, data)
+                .then(({data}) => {
+                    this.getClients();
+                    // let user know it was successful
+                })
+                .catch(({response}) => {
+                    if (response.status === 401) {
+                        window.location = "/login";
+                    }
+
+                    // process other errors
+                });
+            },
+
+            create() {
+                var data = {
+                    name: this.client_name,
+                    description: this.client_description,
+                    contact_name: this.client_contact_name,
+                    contact_phone: this.client_contact_phone,
+                    contact_email: this.client_contact_email,
+                    
+                };
+
+                axios.post('/api/clients/', data)
+                .then(({data}) => {
+                    this.getClients();
+                    // let user know it was successful
+                })
+                .catch(({response}) => {
+                    if (response.status === 401) {
+                        window.location = "/login";
+                    }
+
+                    // process other errors
+                });
+            },
+
+            clearClient() {
+                this.client = null;
+                this.client_id = '';
+                this.client_name = '';
+                this.client_description = '';
+                this.client_contact_name = '';
+                this.client_contact_phone = '';
+                this.client_contact_email = '';
+            },
+
+            navClass(id) {
+                if(id == this.client_id) {
+                    return 'selected';
+                }
+
+                return '';
             }
         },
 
@@ -60,6 +179,9 @@
         created() {
             this.getClients();
         },
+        computed: {
+            
+        }
 
     }
 </script>
