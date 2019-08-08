@@ -16,53 +16,65 @@
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
-                    <div class="row">
-                        <div class="col-sm-12" style="text-align:right;">
-                            <button @click="clearClient" class="btn btn-primary">NEW</button>
-                            <hr>
+                    <div class="overlay_area">
+
+                        <div class="overlay" v-if="working == true">
+                            <div class="overlay_color">
+                                <div class="spinner-container">
+                                    <i class="fa fa-cog fa-spin" aria-hidden="true"></i>
+                                    <i class="fa fa-cog fa-spin" aria-hidden="true"></i>
+                                    <i class="fa fa-cog fa-spin" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align:right;">
+                                <button @click="clearClient" class="btn btn-primary">NEW</button>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>Name:</label>
+                                <input class="form-control" v-bind:class="hasErrors('name')" v-model="client_name" />
+                                <span class="form-control-error-block">{{getError('name')}}&nbsp;</span>
+                                <br>
+                                <br>
+                                <label>Description:</label>
+                                <textarea class="form-control" v-bind:class="hasErrors('description')" v-model="client_description">
+                                    {{client_description}}
+                                </textarea>
+                                <span class="form-control-error-block">{{getError('description')}}&nbsp;</span>
+                                <br>
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Contact Name:</label>
+                                <input class="form-control" v-bind:class="hasErrors('contact_name')" v-model="client_contact_name" />
+                                <span class="form-control-error-block">{{getError('contact_name')}}&nbsp;</span>
+                                <br>
+                                <br>
+                                <label>Contact Phone:</label>
+                                <input class="form-control" v-bind:class="hasErrors('contact_phone')" v-model="client_contact_phone" />
+                                <span class="form-control-error-block">{{getError('contact_phone')}}&nbsp;</span>
+                                <br>
+                                <br>
+                                <label>Contact Email:</label>
+                                <input type="email" class="form-control" v-bind:class="hasErrors('contact_email')" v-model="client_contact_email" />
+                                <span class="form-control-error-block">{{getError('contact_email')}}&nbsp;</span>
+                                <br>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align:right;">
+                                <hr>
+                                <button v-if="client_id" @click="update" class="btn btn-primary">UPDATE</button>
+                                <button v-else @click="create" class="btn btn-primary">CREATE</button>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label>Name:</label>
-                            <input class="form-control" v-bind:class="hasErrors('name')" v-model="client_name" />
-                            <span class="form-control-error-block">{{getError('name')}}&nbsp;</span>
-                            <br>
-                            <br>
-                            <label>Description:</label>
-                            <textarea class="form-control" v-bind:class="hasErrors('description')" v-model="client_description">
-                                {{client_description}}
-                            </textarea>
-                            <span class="form-control-error-block">{{getError('description')}}&nbsp;</span>
-                            <br>
-                        </div>
-                        <div class="col-sm-6">
-                            <label>Contact Name:</label>
-                            <input class="form-control" v-bind:class="hasErrors('contact_name')" v-model="client_contact_name" />
-                            <span class="form-control-error-block">{{getError('contact_name')}}&nbsp;</span>
-                            <br>
-                            <br>
-                            <label>Contact Phone:</label>
-                            <input class="form-control" v-bind:class="hasErrors('contact_phone')" v-model="client_contact_phone" />
-                            <span class="form-control-error-block">{{getError('contact_phone')}}&nbsp;</span>
-                            <br>
-                            <br>
-                            <label>Contact Email:</label>
-                            <input type="email" class="form-control" v-bind:class="hasErrors('contact_email')" v-model="client_contact_email" />
-                            <span class="form-control-error-block">{{getError('contact_email')}}&nbsp;</span>
-                            <br>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-12" style="text-align:right;">
-                            <hr>
-                            <button v-if="client_id" @click="update" class="btn btn-primary">UPDATE</button>
-                            <button v-else @click="create" class="btn btn-primary">CREATE</button>
-                        </div>
-                    </div>
-
                 </main>
             </div>
         </div>
@@ -82,6 +94,7 @@
                 client_contact_phone: '',   
                 client_contact_email: '',
                 errors: [],
+                working: false,
             };
         },
 
@@ -129,10 +142,12 @@
                     
                 };
 
+                this.working = true;
                 axios.put('/api/clients/'+this.client_id, data)
                 .then(({data}) => {
                     this.getClients();
                     this.errors = [];
+                    this.working = false;
                     // let user know it was successful
                 })
                 .catch(({response}) => {
@@ -144,6 +159,8 @@
                     if (response.status === 422) {
                         this.errors = response.data.errors;
                     }
+
+                    this.working = false;
                 });
             },
 
@@ -157,10 +174,12 @@
                     
                 };
 
+                this.working = true;
                 axios.post('/api/clients/', data)
                 .then(({data}) => {
                     this.getClients();
                     this.errors = [];
+                    this.working = false;
                     // let user know it was successful
                 })
                 .catch(({response}) => {
@@ -173,7 +192,7 @@
                         this.errors = response.data.errors;
                     }
                         
-                    
+                    this.working = false;
                 });
             },
 

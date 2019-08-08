@@ -1863,6 +1863,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1874,7 +1886,8 @@ __webpack_require__.r(__webpack_exports__);
       client_contact_name: '',
       client_contact_phone: '',
       client_contact_email: '',
-      errors: []
+      errors: [],
+      working: false
     };
   },
   methods: {
@@ -1918,12 +1931,14 @@ __webpack_require__.r(__webpack_exports__);
         contact_phone: this.client_contact_phone,
         contact_email: this.client_contact_email
       };
+      this.working = true;
       axios.put('/api/clients/' + this.client_id, data).then(function (_ref3) {
         var data = _ref3.data;
 
         _this2.getClients();
 
-        _this2.errors = []; // let user know it was successful
+        _this2.errors = [];
+        _this2.working = false; // let user know it was successful
       })["catch"](function (_ref4) {
         var response = _ref4.response;
 
@@ -1935,6 +1950,8 @@ __webpack_require__.r(__webpack_exports__);
         if (response.status === 422) {
           _this2.errors = response.data.errors;
         }
+
+        _this2.working = false;
       });
     },
     create: function create() {
@@ -1947,12 +1964,14 @@ __webpack_require__.r(__webpack_exports__);
         contact_phone: this.client_contact_phone,
         contact_email: this.client_contact_email
       };
+      this.working = true;
       axios.post('/api/clients/', data).then(function (_ref5) {
         var data = _ref5.data;
 
         _this3.getClients();
 
-        _this3.errors = []; // let user know it was successful
+        _this3.errors = [];
+        _this3.working = false; // let user know it was successful
       })["catch"](function (_ref6) {
         var response = _ref6.response;
 
@@ -1964,6 +1983,8 @@ __webpack_require__.r(__webpack_exports__);
         if (response.status === 422) {
           _this3.errors = response.data.errors;
         }
+
+        _this3.working = false;
       });
     },
     clearClient: function clearClient() {
@@ -37721,230 +37742,236 @@ var render = function() {
               attrs: { role: "main" }
             },
             [
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "col-sm-12",
-                    staticStyle: { "text-align": "right" }
-                  },
-                  [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        on: { click: _vm.clearClient }
-                      },
-                      [_vm._v("NEW")]
-                    ),
-                    _vm._v(" "),
-                    _c("hr")
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [_vm._v("Name:")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.client_name,
-                        expression: "client_name"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: _vm.hasErrors("name"),
-                    domProps: { value: _vm.client_name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.client_name = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "form-control-error-block" }, [
-                    _vm._v(_vm._s(_vm.getError("name")) + " ")
-                  ]),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("label", [_vm._v("Description:")]),
-                  _vm._v(" "),
+              _c("div", { staticClass: "overlay_area" }, [
+                _vm.working == true
+                  ? _c("div", { staticClass: "overlay" }, [_vm._m(0)])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
                   _c(
-                    "textarea",
+                    "div",
                     {
+                      staticClass: "col-sm-12",
+                      staticStyle: { "text-align": "right" }
+                    },
+                    [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          on: { click: _vm.clearClient }
+                        },
+                        [_vm._v("NEW")]
+                      ),
+                      _vm._v(" "),
+                      _c("hr")
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-sm-6" }, [
+                    _c("label", [_vm._v("Name:")]),
+                    _vm._v(" "),
+                    _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.client_description,
-                          expression: "client_description"
+                          value: _vm.client_name,
+                          expression: "client_name"
                         }
                       ],
                       staticClass: "form-control",
-                      class: _vm.hasErrors("description"),
-                      domProps: { value: _vm.client_description },
+                      class: _vm.hasErrors("name"),
+                      domProps: { value: _vm.client_name },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.client_description = $event.target.value
+                          _vm.client_name = $event.target.value
                         }
                       }
-                    },
-                    [
-                      _vm._v(
-                        "                            " +
-                          _vm._s(_vm.client_description) +
-                          "\n                        "
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "form-control-error-block" }, [
-                    _vm._v(_vm._s(_vm.getError("description")) + " ")
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-control-error-block" }, [
+                      _vm._v(_vm._s(_vm.getError("name")) + " ")
+                    ]),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("label", [_vm._v("Description:")]),
+                    _vm._v(" "),
+                    _c(
+                      "textarea",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.client_description,
+                            expression: "client_description"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        class: _vm.hasErrors("description"),
+                        domProps: { value: _vm.client_description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.client_description = $event.target.value
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "                                " +
+                            _vm._s(_vm.client_description) +
+                            "\n                            "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-control-error-block" }, [
+                      _vm._v(_vm._s(_vm.getError("description")) + " ")
+                    ]),
+                    _vm._v(" "),
+                    _c("br")
                   ]),
                   _vm._v(" "),
-                  _c("br")
+                  _c("div", { staticClass: "col-sm-6" }, [
+                    _c("label", [_vm._v("Contact Name:")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.client_contact_name,
+                          expression: "client_contact_name"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      class: _vm.hasErrors("contact_name"),
+                      domProps: { value: _vm.client_contact_name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.client_contact_name = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-control-error-block" }, [
+                      _vm._v(_vm._s(_vm.getError("contact_name")) + " ")
+                    ]),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("label", [_vm._v("Contact Phone:")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.client_contact_phone,
+                          expression: "client_contact_phone"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      class: _vm.hasErrors("contact_phone"),
+                      domProps: { value: _vm.client_contact_phone },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.client_contact_phone = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-control-error-block" }, [
+                      _vm._v(_vm._s(_vm.getError("contact_phone")) + " ")
+                    ]),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("label", [_vm._v("Contact Email:")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.client_contact_email,
+                          expression: "client_contact_email"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      class: _vm.hasErrors("contact_email"),
+                      attrs: { type: "email" },
+                      domProps: { value: _vm.client_contact_email },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.client_contact_email = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-control-error-block" }, [
+                      _vm._v(_vm._s(_vm.getError("contact_email")) + " ")
+                    ]),
+                    _vm._v(" "),
+                    _c("br")
+                  ])
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [_vm._v("Contact Name:")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.client_contact_name,
-                        expression: "client_contact_name"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: _vm.hasErrors("contact_name"),
-                    domProps: { value: _vm.client_contact_name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.client_contact_name = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "form-control-error-block" }, [
-                    _vm._v(_vm._s(_vm.getError("contact_name")) + " ")
-                  ]),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("label", [_vm._v("Contact Phone:")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.client_contact_phone,
-                        expression: "client_contact_phone"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: _vm.hasErrors("contact_phone"),
-                    domProps: { value: _vm.client_contact_phone },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.client_contact_phone = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "form-control-error-block" }, [
-                    _vm._v(_vm._s(_vm.getError("contact_phone")) + " ")
-                  ]),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("label", [_vm._v("Contact Email:")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.client_contact_email,
-                        expression: "client_contact_email"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: _vm.hasErrors("contact_email"),
-                    attrs: { type: "email" },
-                    domProps: { value: _vm.client_contact_email },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.client_contact_email = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "form-control-error-block" }, [
-                    _vm._v(_vm._s(_vm.getError("contact_email")) + " ")
-                  ]),
-                  _vm._v(" "),
-                  _c("br")
+                _c("div", { staticClass: "row" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "col-sm-12",
+                      staticStyle: { "text-align": "right" }
+                    },
+                    [
+                      _c("hr"),
+                      _vm._v(" "),
+                      _vm.client_id
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              on: { click: _vm.update }
+                            },
+                            [_vm._v("UPDATE")]
+                          )
+                        : _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              on: { click: _vm.create }
+                            },
+                            [_vm._v("CREATE")]
+                          )
+                    ]
+                  )
                 ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "col-sm-12",
-                    staticStyle: { "text-align": "right" }
-                  },
-                  [
-                    _c("hr"),
-                    _vm._v(" "),
-                    _vm.client_id
-                      ? _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-primary",
-                            on: { click: _vm.update }
-                          },
-                          [_vm._v("UPDATE")]
-                        )
-                      : _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-primary",
-                            on: { click: _vm.create }
-                          },
-                          [_vm._v("CREATE")]
-                        )
-                  ]
-                )
               ])
             ]
           )
@@ -37954,7 +37981,31 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "overlay_color" }, [
+      _c("div", { staticClass: "spinner-container" }, [
+        _c("i", {
+          staticClass: "fa fa-cog fa-spin",
+          attrs: { "aria-hidden": "true" }
+        }),
+        _vm._v(" "),
+        _c("i", {
+          staticClass: "fa fa-cog fa-spin",
+          attrs: { "aria-hidden": "true" }
+        }),
+        _vm._v(" "),
+        _c("i", {
+          staticClass: "fa fa-cog fa-spin",
+          attrs: { "aria-hidden": "true" }
+        })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
