@@ -32,6 +32,7 @@
 @mixin rounded {
     // write the css here
     border-radius: 5px;
+    overflow: hidden;
 }
 
 .side-nav .nav {
@@ -46,7 +47,10 @@
 .side-nav .nav .nav-item.selected {
     background-color: $background-selected;
     color: $background-selected-text;
-    border-bottom: 1px solid $border;
+}
+
+.side-nav .nav .nav-item:last-child {
+    border-bottom: none;
 }
 
 .navbar.fixed-top {

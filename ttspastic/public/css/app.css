@@ -10667,6 +10667,7 @@ a.text-dark:focus {
 
 .side-nav .nav {
   border-radius: 5px;
+  overflow: hidden;
   border: 1px solid #CCC;
 }
 
@@ -10677,7 +10678,10 @@ a.text-dark:focus {
 .side-nav .nav .nav-item.selected {
   background-color: #343a40;
   color: #FFF;
-  border-bottom: 1px solid #CCC;
+}
+
+.side-nav .nav .nav-item:last-child {
+  border-bottom: none;
 }
 
 .navbar.fixed-top {
