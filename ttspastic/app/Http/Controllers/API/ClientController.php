@@ -24,6 +24,14 @@ class ClientController extends Controller
     
     public function update(UpdateClientRequest $request, Client $client)
     {
-        dd($client);
+        $validatedData = $request->validated();
+        $client->name = $validatedData['name'];
+        $client->description = $validatedData['description'];
+        $client->contact_name = $validatedData['contact_name'];
+        $client->contact_phone = $validatedData['contact_phone'];
+        $client->contact_email = $validatedData['contact_email'];
+        
+        // using save so we can have observer on updates, observer would then use pusher to update other users
+        $client->save();
     }
 }

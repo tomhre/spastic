@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateClientRequest extends FormRequest
 {
@@ -25,10 +26,11 @@ class UpdateClientRequest extends FormRequest
     {
         $client = $this->route('client');
         
-        dd($client);
-        
         return [
-            'name'              => 'required|unique:clients,name',
+            'name'              => [ 
+                                    'required',
+                                    Rule::unique('clients','name')->ignore($client->id),
+                                ],
             'description'       => 'nullable',
             'contact_name'      => 'nullable',
             'contact_phone'     => 'nullable',
