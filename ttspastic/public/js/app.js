@@ -1853,6 +1853,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1863,7 +1873,8 @@ __webpack_require__.r(__webpack_exports__);
       client_description: '',
       client_contact_name: '',
       client_contact_phone: '',
-      client_contact_email: ''
+      client_contact_email: '',
+      errors: []
     };
   },
   methods: {
@@ -1873,6 +1884,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/clients').then(function (_ref) {
         var data = _ref.data;
         _this.clients = data;
+        _this.errors = [];
       })["catch"](function (_ref2) {
         var response = _ref2.response;
 
@@ -1883,6 +1895,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     loadClientData: function loadClientData(client_id) {
       var t = this;
+      this.errors = [];
       this.clients.forEach(function (client) {
         if (client.id == client_id) {
           t.client = client;
@@ -1908,8 +1921,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.put('/api/clients/' + this.client_id, data).then(function (_ref3) {
         var data = _ref3.data;
 
-        _this2.getClients(); // let user know it was successful
+        _this2.getClients();
 
+        _this2.errors = []; // let user know it was successful
       })["catch"](function (_ref4) {
         var response = _ref4.response;
 
@@ -1917,6 +1931,10 @@ __webpack_require__.r(__webpack_exports__);
           window.location = "/login";
         } // process other errors
 
+
+        if (response.status === 422) {
+          _this2.errors = response.data.errors;
+        }
       });
     },
     create: function create() {
@@ -1932,8 +1950,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/api/clients/', data).then(function (_ref5) {
         var data = _ref5.data;
 
-        _this3.getClients(); // let user know it was successful
+        _this3.getClients();
 
+        _this3.errors = []; // let user know it was successful
       })["catch"](function (_ref6) {
         var response = _ref6.response;
 
@@ -1941,9 +1960,14 @@ __webpack_require__.r(__webpack_exports__);
           window.location = "/login";
         } // process other errors
 
+
+        if (response.status === 422) {
+          _this3.errors = response.data.errors;
+        }
       });
     },
     clearClient: function clearClient() {
+      this.errors = [];
       this.client = null;
       this.client_id = '';
       this.client_name = '';
@@ -1955,6 +1979,24 @@ __webpack_require__.r(__webpack_exports__);
     navClass: function navClass(id) {
       if (id == this.client_id) {
         return 'selected';
+      }
+
+      return '';
+    },
+    hasErrors: function hasErrors(column_name) {
+      if (this.errors.hasOwnProperty(column_name)) {
+        return 'input-error';
+      }
+
+      return '';
+    },
+    getError: function getError(column_name) {
+      if (this.errors.hasOwnProperty(column_name)) {
+        var errorString = '';
+        this.errors[column_name].forEach(function (error) {
+          errorString += error;
+        });
+        return errorString;
       }
 
       return '';
@@ -37715,6 +37757,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
+                    class: _vm.hasErrors("name"),
                     domProps: { value: _vm.client_name },
                     on: {
                       input: function($event) {
@@ -37725,6 +37768,12 @@ var render = function() {
                       }
                     }
                   }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "form-control-error-block" }, [
+                    _vm._v(_vm._s(_vm.getError("name")) + " ")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
                   _vm._v(" "),
                   _c("br"),
                   _vm._v(" "),
@@ -37742,6 +37791,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
+                      class: _vm.hasErrors("description"),
                       domProps: { value: _vm.client_description },
                       on: {
                         input: function($event) {
@@ -37759,7 +37809,13 @@ var render = function() {
                           "\n                        "
                       )
                     ]
-                  )
+                  ),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "form-control-error-block" }, [
+                    _vm._v(_vm._s(_vm.getError("description")) + " ")
+                  ]),
+                  _vm._v(" "),
+                  _c("br")
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-sm-6" }, [
@@ -37775,6 +37831,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
+                    class: _vm.hasErrors("contact_name"),
                     domProps: { value: _vm.client_contact_name },
                     on: {
                       input: function($event) {
@@ -37785,6 +37842,12 @@ var render = function() {
                       }
                     }
                   }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "form-control-error-block" }, [
+                    _vm._v(_vm._s(_vm.getError("contact_name")) + " ")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
                   _vm._v(" "),
                   _c("br"),
                   _vm._v(" "),
@@ -37800,6 +37863,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
+                    class: _vm.hasErrors("contact_phone"),
                     domProps: { value: _vm.client_contact_phone },
                     on: {
                       input: function($event) {
@@ -37810,6 +37874,12 @@ var render = function() {
                       }
                     }
                   }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "form-control-error-block" }, [
+                    _vm._v(_vm._s(_vm.getError("contact_phone")) + " ")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
                   _vm._v(" "),
                   _c("br"),
                   _vm._v(" "),
@@ -37825,6 +37895,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
+                    class: _vm.hasErrors("contact_email"),
                     attrs: { type: "email" },
                     domProps: { value: _vm.client_contact_email },
                     on: {
@@ -37835,7 +37906,13 @@ var render = function() {
                         _vm.client_contact_email = $event.target.value
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "form-control-error-block" }, [
+                    _vm._v(_vm._s(_vm.getError("contact_email")) + " ")
+                  ]),
+                  _vm._v(" "),
+                  _c("br")
                 ])
               ]),
               _vm._v(" "),

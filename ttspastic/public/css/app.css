@@ -10684,3 +10684,11 @@ a.text-dark:focus {
   border-bottom: 3px solid #6d00db;
 }
 
+.form-control.input-error {
+  border-color: #d82e00;
+}
+
+.form-control-error-block {
+  color: #d82e00;
+}
+

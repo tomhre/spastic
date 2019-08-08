@@ -26,22 +26,32 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>Name:</label>
-                            <input class="form-control" v-model="client_name" />
+                            <input class="form-control" v-bind:class="hasErrors('name')" v-model="client_name" />
+                            <span class="form-control-error-block">{{getError('name')}}&nbsp;</span>
+                            <br>
                             <br>
                             <label>Description:</label>
-                            <textarea class="form-control" v-model="client_description">
+                            <textarea class="form-control" v-bind:class="hasErrors('description')" v-model="client_description">
                                 {{client_description}}
                             </textarea>
+                            <span class="form-control-error-block">{{getError('description')}}&nbsp;</span>
+                            <br>
                         </div>
                         <div class="col-sm-6">
                             <label>Contact Name:</label>
-                            <input class="form-control" v-model="client_contact_name" />
+                            <input class="form-control" v-bind:class="hasErrors('contact_name')" v-model="client_contact_name" />
+                            <span class="form-control-error-block">{{getError('contact_name')}}&nbsp;</span>
+                            <br>
                             <br>
                             <label>Contact Phone:</label>
-                            <input class="form-control" v-model="client_contact_phone" />
+                            <input class="form-control" v-bind:class="hasErrors('contact_phone')" v-model="client_contact_phone" />
+                            <span class="form-control-error-block">{{getError('contact_phone')}}&nbsp;</span>
+                            <br>
                             <br>
                             <label>Contact Email:</label>
-                            <input type="email" class="form-control" v-model="client_contact_email" />
+                            <input type="email" class="form-control" v-bind:class="hasErrors('contact_email')" v-model="client_contact_email" />
+                            <span class="form-control-error-block">{{getError('contact_email')}}&nbsp;</span>
+                            <br>
                         </div>
                     </div>
 
@@ -71,6 +81,7 @@
                 client_contact_name: '',
                 client_contact_phone: '',   
                 client_contact_email: '',
+                errors: [],
             };
         },
 
@@ -80,6 +91,7 @@
                 axios.get('/api/clients')
                 .then(({data}) => {
                     this.clients = data;
+                    this.errors = [];
                 })
                 .catch(({response}) => {
                     if (response.status === 401) {
@@ -90,6 +102,8 @@
 
             loadClientData(client_id) {
                 var t = this;
+
+                this.errors = [];
 
                 this.clients.forEach(function(client){
                     if(client.id == client_id) {
@@ -118,6 +132,7 @@
                 axios.put('/api/clients/'+this.client_id, data)
                 .then(({data}) => {
                     this.getClients();
+                    this.errors = [];
                     // let user know it was successful
                 })
                 .catch(({response}) => {
@@ -126,6 +141,9 @@
                     }
 
                     // process other errors
+                    if (response.status === 422) {
+                        this.errors = response.data.errors;
+                    }
                 });
             },
 
@@ -142,18 +160,25 @@
                 axios.post('/api/clients/', data)
                 .then(({data}) => {
                     this.getClients();
+                    this.errors = [];
                     // let user know it was successful
                 })
                 .catch(({response}) => {
                     if (response.status === 401) {
                         window.location = "/login";
                     }
-
+                        
                     // process other errors
+                    if (response.status === 422) {
+                        this.errors = response.data.errors;
+                    }
+                        
+                    
                 });
             },
 
             clearClient() {
+                this.errors = [];
                 this.client = null;
                 this.client_id = '';
                 this.client_name = '';
@@ -166,6 +191,27 @@
             navClass(id) {
                 if(id == this.client_id) {
                     return 'selected';
+                }
+
+                return '';
+            },
+
+            hasErrors(column_name) {
+                if(this.errors.hasOwnProperty(column_name)) {
+                    return 'input-error';
+                }
+
+                return '';
+            },
+
+            getError(column_name) {
+                if(this.errors.hasOwnProperty(column_name)) {
+                    var errorString = '';
+                    this.errors[column_name].forEach(function(error){
+                        errorString += error;
+                    });
+
+                    return errorString;
                 }
 
                 return '';

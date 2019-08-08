@@ -52,3 +52,11 @@
 .navbar.fixed-top {
     border-bottom: 3px solid #6d00db;
 }
+
+.form-control.input-error {
+    border-color: $error-border;
+}
+
+.form-control-error-block {
+    color: $error-block-text;
+}
