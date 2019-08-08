@@ -1924,7 +1924,7 @@ __webpack_require__.r(__webpack_exports__);
     update: function update() {
       var _this2 = this;
 
-      var data = {
+      var update_data = {
         name: this.client_name,
         description: this.client_description,
         contact_name: this.client_contact_name,
@@ -1932,10 +1932,10 @@ __webpack_require__.r(__webpack_exports__);
         contact_email: this.client_contact_email
       };
       this.working = true;
-      axios.put('/api/clients/' + this.client_id, data).then(function (_ref3) {
+      axios.put('/api/clients/' + this.client_id, update_data).then(function (_ref3) {
         var data = _ref3.data;
 
-        _this2.getClients();
+        _this2.updateExisting(_this2.client_id, update_data);
 
         _this2.errors = [];
         _this2.working = false; // let user know it was successful
@@ -1954,6 +1954,18 @@ __webpack_require__.r(__webpack_exports__);
         _this2.working = false;
       });
     },
+    updateExisting: function updateExisting(id, data) {
+      this.clients.forEach(function (client) {
+        if (client.id == id) {
+          console.log(data);
+          client.name = data.name;
+          client.description = data.description;
+          client.contact_name = data.contact_name;
+          client.contact_phone = data.contact_phone;
+          client.contact_email = data.contact_email;
+        }
+      });
+    },
     create: function create() {
       var _this3 = this;
 
@@ -1968,8 +1980,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/api/clients/', data).then(function (_ref5) {
         var data = _ref5.data;
 
-        _this3.getClients();
+        _this3.clients.push(data);
 
+        _this3.client_id = data.id;
         _this3.errors = [];
         _this3.working = false; // let user know it was successful
       })["catch"](function (_ref6) {
@@ -2023,9 +2036,7 @@ __webpack_require__.r(__webpack_exports__);
       return '';
     }
   },
-  mounted: function mounted() {
-    console.log("mounted");
-  },
+  mounted: function mounted() {},
   created: function created() {
     this.getClients();
   },
@@ -37696,44 +37707,49 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "container-fluid" }, [
         _c("div", { staticClass: "row" }, [
-          _c(
-            "div",
-            {
-              staticClass:
-                "col-md-2 d-none d-md-block bg-light side-nav sidebar"
-            },
-            [
-              _c(
-                "ul",
-                { staticClass: "nav flex-column" },
-                _vm._l(_vm.clients, function(client) {
-                  return _c(
-                    "li",
-                    { staticClass: "nav-item", class: _vm.navClass(client.id) },
-                    [
-                      _c(
-                        "a",
+          _vm.clients.length > 0
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "col-md-2 d-none d-md-block bg-light side-nav sidebar"
+                },
+                [
+                  _c(
+                    "ul",
+                    { staticClass: "nav flex-column" },
+                    _vm._l(_vm.clients, function(client) {
+                      return _c(
+                        "li",
                         {
-                          staticClass: "nav-link",
-                          on: {
-                            click: function($event) {
-                              return _vm.loadClientData(client.id)
-                            }
-                          }
+                          staticClass: "nav-item",
+                          class: _vm.navClass(client.id)
                         },
                         [
-                          _c("span", { attrs: { "data-feather": "home" } }),
-                          _vm._v(" " + _vm._s(client.name) + " "),
-                          _c("span", { staticClass: "sr-only" })
+                          _c(
+                            "a",
+                            {
+                              staticClass: "nav-link",
+                              on: {
+                                click: function($event) {
+                                  return _vm.loadClientData(client.id)
+                                }
+                              }
+                            },
+                            [
+                              _c("span", { attrs: { "data-feather": "home" } }),
+                              _vm._v(" " + _vm._s(client.name) + " "),
+                              _c("span", { staticClass: "sr-only" })
+                            ]
+                          )
                         ]
                       )
-                    ]
+                    }),
+                    0
                   )
-                }),
-                0
+                ]
               )
-            ]
-          ),
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "main",

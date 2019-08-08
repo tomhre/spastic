@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row">
 
-                <div class="col-md-2 d-none d-md-block bg-light side-nav sidebar">    
+                <div v-if="clients.length > 0" class="col-md-2 d-none d-md-block bg-light side-nav sidebar">    
                     <ul class="nav flex-column">
                         <li v-for="client in clients" class="nav-item" v-bind:class="navClass(client.id)">
                             <a class="nav-link" @click="loadClientData(client.id)">
@@ -133,7 +133,7 @@
 
             update() {
 
-                var data = {
+                var update_data = {
                     name: this.client_name,
                     description: this.client_description,
                     contact_name: this.client_contact_name,
@@ -143,9 +143,9 @@
                 };
 
                 this.working = true;
-                axios.put('/api/clients/'+this.client_id, data)
+                axios.put('/api/clients/'+this.client_id, update_data)
                 .then(({data}) => {
-                    this.getClients();
+                    this.updateExisting(this.client_id, update_data);
                     this.errors = [];
                     this.working = false;
                     // let user know it was successful
@@ -164,6 +164,20 @@
                 });
             },
 
+            updateExisting(id, data) {
+                this.clients.forEach(function(client){
+                    if(client.id == id) {
+
+                        console.log(data);
+                        client.name = data.name;
+                        client.description = data.description;
+                        client.contact_name = data.contact_name;
+                        client.contact_phone = data.contact_phone;
+                        client.contact_email = data.contact_email;
+                    }
+                });
+            },
+
             create() {
                 var data = {
                     name: this.client_name,
@@ -177,7 +191,8 @@
                 this.working = true;
                 axios.post('/api/clients/', data)
                 .then(({data}) => {
-                    this.getClients();
+                    this.clients.push(data);
+                    this.client_id = data.id;
                     this.errors = [];
                     this.working = false;
                     // let user know it was successful
@@ -238,7 +253,7 @@
         },
 
         mounted() {
-            console.log("mounted");
+
         },
         
         created() {
